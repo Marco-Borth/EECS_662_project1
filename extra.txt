@@ -1,0 +1,68 @@
+do {
+  l' <- evalM (Num l);
+  r' <- evalM (Num r);
+  if (l' >= 0) then
+    if (r' >= 0) then return (Num (l' + r'))
+    else Nothing
+  else Nothing
+}
+
+evalM (Plus l r) = case evalM (Num l) of
+                Nothing -> Nothing
+                Just (Num l) -> Just (Num (l' + r'))
+                Just _ -> Nothing
+
+let x = evalAEMaybe (l)
+   y = evalAEMaybe (r)
+   in Just x + y
+
+
+   evalAEMaybe (Plus l r) = case evalAEMaybe (Num l) of
+                          Nothing -> Nothing
+                          Just evalAE (Num l) -> Just evalAE (Num l)
+                          case evalAE (Num r) of
+                            Nothing -> Nothing
+                            Just evalAE (Num r) -> Just evalAE (Num r)
+
+evalM (Plus l r) = do {
+                    x <- evalAEMaybe (l);
+                    y <- evalAEMaybe (r);
+                    return x + y;
+}
+
+do i <- integer lexer
+             if show i /= "+" && show i /= "-" && show i /= "/" && show i /= "*"
+                then return (Num (fromInteger i))
+                else return parseAE i
+
+plusExpr :: Parser AE
+plusExpr =  do l <- expr
+              reservedOp lexer "+"
+              r <- expr
+              return (Plus (l) (r))
+
+minusExpr :: Parser AE
+minusExpr =  do l <- expr
+               reservedOp lexer "-"
+               r <- expr
+               return (Minus (l) (r))
+
+multExpr :: Parser AE
+multExpr =  do l <- expr
+              reservedOp lexer "*"
+              r <- expr
+              return (Mult (l) (r))
+
+divExpr :: Parser AE
+divExpr =  do l <- expr
+             reservedOp lexer "/"
+             r <- expr
+             return (Div (l) (r)))
+
+
+
+
+             <|> plusExpr
+             <|> minusExpr
+             <|> multExpr
+             <|> divExpr
