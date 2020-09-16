@@ -1,4 +1,6 @@
-terminaltestcases.txt
+-- file Name: terminaltestcases.txt
+-- file Author: Marco Borth, 2894114
+-- description: text file containing all Test cases for functions tested with Linux Terminal.
 
 -- All Test Cases for Num n with all eval functions
 *Main> evalAE (Num 5)

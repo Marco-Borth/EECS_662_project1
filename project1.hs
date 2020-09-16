@@ -1,3 +1,7 @@
+-- file Name: project1.hs
+-- file Author: Marco Borth, 2894114
+-- description: project1 file containing AE Evaluation functions.
+
 {-# LANGUAGE GADTs, FlexibleContexts #-}
 
 -- Imports for Parsec
@@ -142,7 +146,7 @@ evalAE (If0 c l r) =
 evalAEMaybe :: AE -> Maybe Int
 evalAEMaybe (Num n) = do
   Just (evalAE (Num n))
-  
+
 evalAEMaybe (Plus l r) = do
   let x = evalAE (l)
   let y = evalAE (r)

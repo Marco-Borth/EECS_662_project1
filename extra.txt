@@ -1,3 +1,7 @@
+-- file Name: extra.txt
+-- file Author: Marco Borth, 2894114
+-- description: text file containing code/pseudocode for project1.hs.
+
 do {
   l' <- evalM (Num l);
   r' <- evalM (Num r);
