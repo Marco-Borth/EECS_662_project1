@@ -73,6 +73,7 @@ ifExpr  = do reserved lexer "if0"
              e <- expr
              return (If0 c t e)
 
+
 term = parens lexer expr
        <|> numExpr
        <|> ifExpr
@@ -92,13 +93,25 @@ divide :: Int -> Int -> Int
 divide x y | x - y >= 0 = 1 + divide (x - y) y
            | otherwise = 0
 
+someNatVal :: Int -> AE
+someNatVal x = Num x
+
+liftNum :: (Int -> Int -> Int) -> AE -> AE -> AE
+liftNum f (Num l) (Num r) = (Num (f l r))
+
+
+
 evalAE :: AE -> Int
 evalAE (Num n) =
   if n >= 0
     then n :: Int
     else error "ERROR: Only Natural Numbers are Allowed"
 
-evalAE (Plus l r) = evalAE (l) + evalAE (r)
+evalAE (Plus l r) = -- (liftNum (+) (evalAE (Num l)) (evalAE (Num r)))
+  let x = evalAE(l)
+      y = evalAE(r)
+      in x + y
+
 evalAE (Minus l r) =
   let x = evalAE(l)
       y = evalAE(r)
@@ -106,7 +119,11 @@ evalAE (Minus l r) =
         then x - y
         else error "ERROR: Resulting Difference must be Natural"
 
-evalAE (Mult l r) = evalAE (l) * evalAE (r)
+evalAE (Mult l r) =
+  let x = evalAE(l)
+      y = evalAE(r)
+      in x * y
+
 evalAE (Div l r) =
   let x = evalAE(l)
       y = evalAE(r)
@@ -123,7 +140,9 @@ evalAE (If0 c l r) =
 
 
 evalAEMaybe :: AE -> Maybe Int
-evalAEMaybe (Num n) = do Just (evalAE (Num n))
+evalAEMaybe (Num n) = do
+  Just (evalAE (Num n))
+  
 evalAEMaybe (Plus l r) = do
   let x = evalAE (l)
   let y = evalAE (r)
@@ -173,4 +192,4 @@ evalM (Div l r) = do evalAEMaybe (Div l r)
 evalM (If0 c l r) = do evalAEMaybe (If0 c l r)
 
 interpAE :: String -> Maybe Int
-interpAE equation = evalM(parseAE equation)
+interpAE x = evalM(parseAE x)
